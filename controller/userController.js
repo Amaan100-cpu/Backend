@@ -181,7 +181,7 @@ const resendOtp = async (req, res) => {
 
 const logout = (req, res) => {
     try {
-        res.clearCookie("token")
+        res.clearCookie("token",{httpOnly: true,  secure: true,sameSite: "None"})
         return res.status(200).json({ success: true, message: "logout successfully" })
     }
     catch (err) {
