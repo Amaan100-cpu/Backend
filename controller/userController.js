@@ -38,7 +38,7 @@ const registerPost = async (req, res) => {
             const userData = await userModel.updateOne({ email }, { name:capitalizeFirstWord(name), email, password: hash, otp, otpExpire: (Date.now() + 10 * 60 * 1000), reset: false })
             const message = `<h1>Your OTP is ${otp}</h1><p>This code is valid for 10 minutes.</p>`;
             sendEmail(email, message)
-            res.cookie("email", email, { maxAge: 10 * 60 * 1000 });
+            res.cookie("email", email, { maxAge: 10 * 60 * 1000, httpOnly: true,secure: true,sameSite: "None" });
             return res.status(200).json({ success: true, message: "Please verify your email." })
         }
         else {
@@ -49,7 +49,9 @@ const registerPost = async (req, res) => {
             const userData = await userModel.create({ name:capitalizeFirstWord(name), email, password: hash, otp, otpExpire: (Date.now() + 10 * 60 * 1000) })
             const message = `<h1>Your OTP is ${otp}</h1><p>This code is valid for 10 minutes.</p>`;
             sendEmail(email, message)
-            res.cookie("email", email, { maxAge: 10 * 60 * 1000 });
+            res.cookie("email", email, { maxAge: 10 * 60 * 1000, httpOnly: true,
+  secure: true,
+  sameSite: "None" });
             return res.status(200).json({ success: true, message: "Please verify your email.", email })
         }
     }
@@ -88,7 +90,7 @@ const loginPost = async (req, res) => {
                 await userModel.findOneAndUpdate({ email: email }, { otp: otp, otpExpire: (Date.now() + 10 * 60 * 1000), reset: false })
                 const message = `<h1>Your OTP is ${otp}</h1><p>This code is valid for 10 minutes.</p>`;
                 sendEmail(email, message)
-                res.cookie("email", email, { maxAge: 10 * 60 * 1000 })
+                res.cookie("email", email, { maxAge: 10 * 60 * 1000, httpOnly: true,  secure: true,sameSite: "None" })
                 return res.status(200).json({ success: true, message: "Please check your email", email })
             }
         }
@@ -131,12 +133,12 @@ const emailVerification = async (req, res) => {
             }
             else if (data.isVerified) {
                 await userModel.findOneAndUpdate({ email: email }, { otpExpire: null, otp: null })
-                res.cookie("token", token)
+                res.cookie("token", token,{httpOnly: true,  secure: true,sameSite: "None"})
                 return res.status(200).json({ success: true, message: "Login successfully." })
             }
             else {
                 await userModel.findOneAndUpdate({ email: email }, { isVerified: true, otpExpire: null, otp: null })
-                res.cookie("token", token)
+                res.cookie("token", token,{httpOnly: true,  secure: true,sameSite: "None"})
                 return res.status(200).json({ success: true, message: "Registered successfully" })
             }
 
@@ -304,13 +306,13 @@ const clickAuthRegister = async (req, res) => {
         else if (user) {
             const data = await userModel.updateOne({ email }, { clickAuth: emailVerified })
             const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: "24h" })
-            res.cookie("token", token)
+            res.cookie("token", token,{httpOnly: true,  secure: true,sameSite: "None"})
             return res.status(200).json({ success: true, message: "register successfully" })
         }
         else {
             const data = await userModel.create({ email, clickAuth: emailVerified })
             const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: "24h" })
-            res.cookie("token", token)
+            res.cookie("token", token,{httpOnly: true,  secure: true,sameSite: "None"})
             return res.status(200).json({ success: true, message: "register successfully" })
         }
     }
@@ -331,7 +333,7 @@ const clickAuthLogin = async (req, res) => {
         }
         else {
             const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: "24h" })
-            res.cookie("token", token)
+            res.cookie("token", token,{httpOnly: true,  secure: true,sameSite: "None"})
             return res.status(200).json({ success: true, message: "login successfully" })
         }
     }
@@ -355,7 +357,9 @@ const resetPassword = async (req, res) => {
             const salt = await bcrypt.genSalt(10)
             const hash = await bcrypt.hash(password, salt)
             await userModel.findOneAndUpdate({ email }, { otp, otpExpire: Date.now() + 10 * 60 * 1000, reset: true, tempPassword: hash })
-            res.cookie("email", email, { maxAge: 10 * 60 * 1000 });
+            res.cookie("email", email, { maxAge: 10 * 60 * 1000, httpOnly: true,
+  secure: true,
+  sameSite: "None" });
             return res.status(200).json({ success: true, message: "Please verify your email.", email })
         }
 
@@ -551,7 +555,9 @@ const AdminLoginPost = async (req, res) => {
                 await userModel.findOneAndUpdate({ email: email }, { otp: otp, otpExpire: (Date.now() + 10 * 60 * 1000), reset: false })
                 const message = `<h1>Your OTP is ${otp}</h1><p>This code is valid for 10 minutes.</p>`;
                 sendEmail(email, message)
-                res.cookie("email", email, { maxAge: 10 * 60 * 1000 })
+                res.cookie("email", email, { maxAge: 10 * 60 * 1000, httpOnly: true,
+  secure: true,
+  sameSite: "None" })
                 return res.status(200).json({ success: true, message: "Please check your email", email })
             }
         }
