@@ -12,20 +12,13 @@ app.use(express.json())
 app.use(cookieParser())
 const registerRout=require("./routes/userRout.js")
 
-app.use(express.static(path.join(__dirname, '..', 'Frontend', 'dist')));
 app.use(cors({
   origin: process.env.REACT_URL,
   credentials:true
 }));
 app.use("/productImg",express.static("./productImg"))
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'Frontend', 'dist', 'index.html'));
-});
-
 app.use("/",registerRout)
-
-
 
 
 app.listen(process.env.PORT, () => {
