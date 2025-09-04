@@ -1,6 +1,7 @@
 const express = require("express")
 const cookieParser=require("cookie-parser")
 const app = express()
+const path = require('path');
 const dotenv=require("dotenv")
 dotenv.config()
 require("./db.js")
@@ -10,11 +11,17 @@ app.use(express.urlencoded({extended:true}))
 app.use(express.json())
 app.use(cookieParser())
 const registerRout=require("./routes/userRout.js")
+
+app.use(express.static(path.join(__dirname, '..', 'Frontend', 'dist')));
 app.use(cors({
   origin: process.env.REACT_URL,
   credentials:true
 }));
 app.use("/productImg",express.static("./productImg"))
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'Frontend', 'dist', 'index.html'));
+});
 
 app.use("/",registerRout)
 
