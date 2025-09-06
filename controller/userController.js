@@ -495,7 +495,7 @@ const payment=async(req,res)=>{
 }
    }
    catch(err){
-    return res.status(500).send({success:false,message:"Server error1",perr:err.message})
+    return res.status(500).send({success:false,message:"Server error1",perr:process.env.key_id})
    }
 }
 
