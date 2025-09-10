@@ -9,6 +9,14 @@ const multer = require("multer")
 const fs = require("fs")
 const Razorpay=require("razorpay")
 const crypto=require("crypto")
+const cloudinary=require("cloudinary").v2
+
+cloudinary.config({
+    cloud_name:"dlllh3psb",
+    api_key:"482354311477235",
+    api_secret:"YMYwoVOnk-vNFflFEm3fBd_ghjs"
+})
+
 
 function capitalizeFirstWord(str) {
   if (!str) return '';
@@ -243,19 +251,22 @@ const productPost = async (req, res) => {
                 return res.status(400).json({ success: false, message: "All fields are required" })
             }
             else if (update == "update") {
-                fs.unlinkSync(imgPath)
-                await productModel.updateOne({ _id: productId2 }, { productName: capitalizeFirstWord(productName), description, color: capitalizeFirstWord(color), category: capitalizeFirstWord(category), subCategory, price, sizes:arr, brand: capitalizeFirstWord(brand), discount, imgName, img: req.file.path });
+                await cloudinary.uploader.destroy(imgPath)
+                const upload=await cloudinary.uploader.upload(req.file.path)
+                fs.unlinkSync(req.file.path)
+                await productModel.updateOne({ _id: productId2 }, { productName: capitalizeFirstWord(productName), description, color: capitalizeFirstWord(color), category: capitalizeFirstWord(category), subCategory, price, sizes:arr, brand: capitalizeFirstWord(brand), discount, imgName, img: upload.url,cloudinaryId:upload.public_id });
 
                 return res.status(200).json({ success: true, message: "Product updated successfully" })
             }
             else {
-                await productModel.create({ productName:capitalizeFirstWord(productName), description, color:capitalizeFirstWord(color), category: capitalizeFirstWord(category), subCategory, price, sizes:arr, brand:capitalizeFirstWord(brand), discount, user: findData.id, imgName, img: req.file.path });
-
+                const upload=await cloudinary.uploader.upload(req.file.path)
+                fs.unlinkSync(req.file.path)
+                await productModel.create({ productName:capitalizeFirstWord(productName), description, color:capitalizeFirstWord(color), category: capitalizeFirstWord(category), subCategory, price, sizes:arr, brand:capitalizeFirstWord(brand), discount, user: findData.id, imgName, img: upload.url,cloudinaryId:upload.public_id });
                 return res.status(200).json({ success: true, message: "Product added successfully." })
             }
         }
         catch (err) {
-            
+            console.log(err.message)
             return res.status(500).json({ success: false, message: "server errorrr" })
         }
     })
@@ -444,7 +455,7 @@ const deleteProduct = async (req, res) => {
             return res.status(400).json({ success: false, message: "you are not login" })
         }
         else if (productId) {
-            fs.unlinkSync(imgPath)
+            await cloudinary.uploader.destroy(imgPath)
             await productModel.deleteOne({ _id: productId })
             return res.status(200).json({ success: true, message: "product deleted successfully" })
         }
