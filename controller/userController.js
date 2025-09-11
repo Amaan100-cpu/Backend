@@ -306,7 +306,7 @@ const isAuth = async (req, res) => {
 
 const clickAuthRegister = async (req, res) => {
     try {
-        const { email, emailVerified } = req.body
+        const { email, emailVerified,name} = req.body
         if (!email || !emailVerified) {
             return res.status(400).json({ success: false, message: "email not verified" })
         }
@@ -321,7 +321,7 @@ const clickAuthRegister = async (req, res) => {
             return res.status(200).json({ success: true, message: "register successfully" })
         }
         else {
-            const data = await userModel.create({ email, clickAuth: emailVerified })
+            const data = await userModel.create({ email, clickAuth: emailVerified,name:capitalizeFirstWord(name) })
             const token = jwt.sign({ email }, process.env.SECRET_KEY, { expiresIn: "24h" })
             res.cookie("token", token,{httpOnly: true,  secure: true,sameSite: "None"})
             return res.status(200).json({ success: true, message: "register successfully" })
