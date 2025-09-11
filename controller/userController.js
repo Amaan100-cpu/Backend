@@ -267,7 +267,7 @@ const productPost = async (req, res) => {
         }
         catch (err) {
             console.log(err.message)
-            return res.status(500).json({ success: false, message: "server errorrr" })
+            return res.status(500).json({ success: false, message: "server errorr" })
         }
     })
 
