@@ -47,7 +47,7 @@ const registerPost = async (req, res) => {
             const message = `<h1>Your OTP is ${otp}</h1><p>This code is valid for 10 minutes.</p>`;
             sendEmail(email, message)
             res.cookie("email", email, { maxAge: 10 * 60 * 1000, httpOnly: true,secure: true,sameSite: "None" });
-            return res.status(200).json({ success: true, message: "Please verify your email." })
+            return res.status(200).json({ success: true, message: "Please verify your email.",email })
         }
         else {
             const { name, email, password } = result.data
