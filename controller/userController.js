@@ -1,4 +1,4 @@
-const { registerVal, loginVal,AdminLoginVal } = require("../validation/userVal.js")
+const { registerVal, loginVal,AdminLoginVal,resetPassVal } = require("../validation/userVal.js")
 const userModel = require("../models/userModel.js")
 const productModel = require("../models/productModel.js")
 const orderModel = require("../models/orderModel.js")
@@ -356,12 +356,20 @@ const clickAuthLogin = async (req, res) => {
 const resetPassword = async (req, res) => {
     try {
         const { email, password, rePassword } = req.body
-        const result = loginVal.safeParse({ email, password })
+        const result = resetPassVal.safeParse({ email, password })
         if (!email || !password) {
             return res.status(400).json({ success: false, message: "All fields are required" })
         }
-        else if (!result.success) {
-            return res.status(400).json({ success: false, message: result.error.issues[0].message })
+        if (!result.success) {
+    
+            return res.status(400).json({ success: false, message: result.error.issues[0]?.message })
+        }
+        const user=await userModel.findOne({email})
+        if(!user){
+            return res.status(400).json({ success: false, message: "You are not registered" })
+        }
+        if(password!=rePassword){
+            return res.status(400).json({ success: false, message: "password and rePassword are not matched" })
         }
         else {
             const otp = otpGenrate()
@@ -376,10 +384,10 @@ const resetPassword = async (req, res) => {
 
     }
     catch (err) {
+        console.log(err.message)
         return res.status(500).json({ success: false, message: "server error" })
     }
 }
-
 const manageReviews = async (req, res) => {
     try {
         const { selectedStar, reviewMsg, productId } = req.body
