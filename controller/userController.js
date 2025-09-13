@@ -45,7 +45,7 @@ const registerPost = async (req, res) => {
             const otp = otpGenrate()
             const userData = await userModel.updateOne({ email }, { name:capitalizeFirstWord(name), email, password: hash, otp, otpExpire: (Date.now() + 10 * 60 * 1000), reset: false })
             const message = `<h1>Your OTP is ${otp}</h1><p>This code is valid for 10 minutes.</p>`;
-            sendEmail(email, message)
+            await sendEmail(email, message)
             res.cookie("email", email, { maxAge: 10 * 60 * 1000, httpOnly: true,secure: true,sameSite: "None" });
             return res.status(200).json({ success: true, message: "Please verify your email.",email })
         }
@@ -56,7 +56,7 @@ const registerPost = async (req, res) => {
             const otp = otpGenrate()
             const userData = await userModel.create({ name:capitalizeFirstWord(name), email, password: hash, otp, otpExpire: (Date.now() + 10 * 60 * 1000) })
             const message = `<h1>Your OTP is ${otp}</h1><p>This code is valid for 10 minutes.</p>`;
-            sendEmail(email, message)
+            await sendEmail(email, message)
             res.cookie("email", email, { maxAge: 10 * 60 * 1000, httpOnly: true,
   secure: true,
   sameSite: "None" });
@@ -97,7 +97,7 @@ const loginPost = async (req, res) => {
                 const otp = otpGenrate()
                 await userModel.findOneAndUpdate({ email: email }, { otp: otp, otpExpire: (Date.now() + 10 * 60 * 1000), reset: false })
                 const message = `<h1>Your OTP is ${otp}</h1><p>This code is valid for 10 minutes.</p>`;
-                sendEmail(email, message)
+                await sendEmail(email, message)
                 res.cookie("email", email, { maxAge: 10 * 60 * 1000, httpOnly: true,  secure: true,sameSite: "None" })
                 return res.status(200).json({ success: true, message: "Please check your email", email })
             }
@@ -177,7 +177,7 @@ const resendOtp = async (req, res) => {
             const message = `<h1>Your OTP is ${otp}</h1><p>This code is valid for 10 minutes.</p>`;
 
             await userModel.findOneAndUpdate({ email: email }, { otp: otp, otpExpire: Date.now() + 10 * 60 * 1000 })
-            sendEmail(email, message)
+            await sendEmail(email, message)
             return res.status(200).json({ success: true, message: "otp send successfully" })
         }
     }
@@ -573,7 +573,7 @@ const AdminLoginPost = async (req, res) => {
                 const otp = otpGenrate()
                 await userModel.findOneAndUpdate({ email: email }, { otp: otp, otpExpire: (Date.now() + 10 * 60 * 1000), reset: false })
                 const message = `<h1>Your OTP is ${otp}</h1><p>This code is valid for 10 minutes.</p>`;
-                sendEmail(email, message)
+                await sendEmail(email, message)
                 res.cookie("email", email, { maxAge: 10 * 60 * 1000, httpOnly: true,
   secure: true,
   sameSite: "None" })
