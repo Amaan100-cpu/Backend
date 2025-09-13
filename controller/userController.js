@@ -539,7 +539,7 @@ const paymentSuccess=async(req,res)=>{
    }
    catch(err){
     
-    return res.status(500).send({success:false,message:"Server error2"})
+    return res.status(500).send({success:false,message:"Server error",err:err.message})
    }
 }
 
