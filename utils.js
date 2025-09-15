@@ -4,7 +4,7 @@ const otpGenrator = require("otp-generator")
 const sendEmail=(email,message)=>{
     const transport=nodemailer.createTransport({
         host:"smtp.gmail.com",
-        port: 443,          
+        port: 465,          
         secure: true,
         auth:{
             user:"amnahmd888@gmail.com",
