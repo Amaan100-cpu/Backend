@@ -254,14 +254,14 @@ const productPost = async (req, res) => {
                 await cloudinary.uploader.destroy(imgPath)
                 const upload=await cloudinary.uploader.upload(req.file.path)
                 fs.unlinkSync(req.file.path)
-                await productModel.updateOne({ _id: productId2 }, { productName: capitalizeFirstWord(productName), description, color: capitalizeFirstWord(color), category: capitalizeFirstWord(category), subCategory, price, sizes:arr, brand: capitalizeFirstWord(brand), discount, imgName, img: upload.url,cloudinaryId:upload.public_id });
+                await productModel.updateOne({ _id: productId2 }, { productName: capitalizeFirstWord(productName), description, color: capitalizeFirstWord(color), category: capitalizeFirstWord(category), subCategory, price, sizes:arr, brand: capitalizeFirstWord(brand), discount, imgName, img: upload.secure_url,cloudinaryId:upload.public_id });
 
-                return res.status(200).json({ success: true, message: "Product updated successfully" })
+                return res.status(200).json({ success: true, message: "Product updated successfully" })                                                                                                                                                                                                                                            
             }
             else {
                 const upload=await cloudinary.uploader.upload(req.file.path)
                 fs.unlinkSync(req.file.path)
-                await productModel.create({ productName:capitalizeFirstWord(productName), description, color:capitalizeFirstWord(color), category: capitalizeFirstWord(category), subCategory, price, sizes:arr, brand:capitalizeFirstWord(brand), discount, user: findData.id, imgName, img: upload.url,cloudinaryId:upload.public_id });
+                await productModel.create({ productName:capitalizeFirstWord(productName), description, color:capitalizeFirstWord(color), category: capitalizeFirstWord(category), subCategory, price, sizes:arr, brand:capitalizeFirstWord(brand), discount, user: findData.id, imgName, img: upload.secure_url,cloudinaryId:upload.public_id });
                 return res.status(200).json({ success: true, message: "Product added successfully." })
             }
         }
