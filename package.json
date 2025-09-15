@@ -11,10 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-<<<<<<< HEAD
     "@sendgrid/mail": "^8.1.5",
-=======
->>>>>>> 80821bbb7ca2993343cfbe7745e09b02ecc75932
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.7.0",
     "cookie-parser": "^1.4.7",
