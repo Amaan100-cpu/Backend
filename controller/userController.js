@@ -96,7 +96,12 @@ const loginPost = async (req, res) => {
             else {
                 const otp = otpGenrate()
                 await userModel.findOneAndUpdate({ email: email }, { otp: otp, otpExpire: (Date.now() + 10 * 60 * 1000), reset: false })
-                const message = `<h1>Your OTP is ${otp}</h1><p>This code is valid for 10 minutes.</p>`;
+                const message = `
+  <p>Your OTP code is <strong>${otp}</strong></p>
+  <p>This code is valid for 10 minutes.</p>
+  <p>If you did not request this code, please ignore this email.</p>
+`;
+
                 await sendEmail(email, message)
                 res.cookie("email", email, { maxAge: 10 * 60 * 1000, httpOnly: true,  secure: true,sameSite: "None" })
                 return res.status(200).json({ success: true, message: "Please check your email", email })
