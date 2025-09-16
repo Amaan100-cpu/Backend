@@ -8,7 +8,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const sendEmail = (email, message) => {
     const msg = {
         to: email,
-        from: 'amaanahmad8616@gmail.com',  // Must be a verified sender in SendGrid
+        from: 'em9563.amacloth.shop',  // Must be a verified sender in SendGrid
         subject: 'Verify your email',
         html: message,
     };
