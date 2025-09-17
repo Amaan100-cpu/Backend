@@ -8,7 +8,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const sendEmail = (email, message) => {
     const msg = {
         to: email,
-        from:"no-reply@em9563.amacloth.shop",  
+        from:"Amacloth@em9563.amacloth.shop",  
         subject: 'Verify your email',
         html: message,
     };
