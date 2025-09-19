@@ -356,9 +356,9 @@ const clickAuthLogin = async (req, res) => {
 
 const resetPassword = async (req, res) => {
     try {
-        const { email, password, rePassword } = req.body
+        const { email, password, rePassword,currentPass } = req.body
         const result = resetPassVal.safeParse({ email, password })
-        if (!email || !password) {
+        if (!email || !password || !currentPass) {
             return res.status(400).json({ success: false, message: "All fields are required" })
         }
         if (!result.success) {
@@ -367,10 +367,18 @@ const resetPassword = async (req, res) => {
         }
         const user=await userModel.findOne({email})
         if(!user){
-            return res.status(400).json({ success: false, message: "You are not registered" })
+            return res.status(400).json({ success: false, message: "Invalid email or password" })
         }
+        if (!user.isVerified) {
+                return res.status(400).json({ success: false, message: "Invalid email or password" })
+            }
+            const passMatch = await bcrypt.compare(currentPass,user.password)
+            if (!passMatch) {
+                return res.status(400).json({ success: false, message: "Invalid email or password" });
+
+            }
         if(password!=rePassword){
-            return res.status(400).json({ success: false, message: "password and rePassword are not matched" })
+            return res.status(400).json({ success: false, message: "password and confirmPassword are not matched" })
         }
         else {
             const otp = otpGenrate()
@@ -389,7 +397,7 @@ const resetPassword = async (req, res) => {
         return res.status(500).json({ success: false, message: "server error" })
     }
 }
-const manageReviews = async (req, res) => {
+    const manageReviews = async (req, res) => {
     try {
         const { selectedStar, reviewMsg, productId } = req.body
         const token = req?.cookies?.token
