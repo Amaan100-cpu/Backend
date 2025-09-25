@@ -64,7 +64,7 @@ const registerPost = async (req, res) => {
         }
     }
     catch (err) {
-        return res.status(500).json({ success: false, message: "server error",err:err })
+        return res.status(500).json({ success: false, message: "server errorrr",err:err })
     }
 
 }
