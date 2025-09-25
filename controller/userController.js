@@ -307,7 +307,7 @@ const isAuth = async (req, res) => {
 
 const clickAuthRegister = async (req, res) => {
     try {
-        const { email, emailVerified } = req.body
+        const { email, emailVerified,name } = req.body
         if (!email || !emailVerified) {
             return res.status(400).json({ success: false, message: "email not verified" })
         }
