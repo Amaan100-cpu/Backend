@@ -329,7 +329,7 @@ const clickAuthRegister = async (req, res) => {
         }
     }
     catch (err) {
-        return res.status(500).json({ success: false, message: "server error" })
+        return res.status(500).json({ success: false, message: "server error",err:err })
     }
 }
 
