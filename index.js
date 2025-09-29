@@ -1,10 +1,10 @@
+const dbConnection=require("./db.js")
 const express = require("express")
 const cookieParser=require("cookie-parser")
 const app = express()
 const path = require('path');
 const dotenv=require("dotenv")
 dotenv.config()
-require("./db.js")
 const cors=require("cors")
 app.set("view engine","ejs")
 app.use(express.urlencoded({extended:true}))
@@ -20,7 +20,9 @@ app.use("/productImg",express.static("./productImg"))
 
 app.use("/",registerRout)
 
-
-app.listen(process.env.PORT, () => {
+dbConnection()
+.then(()=>{
+  app.listen(process.env.PORT, () => {
     console.log(`server is start on ${process.env.PORT}`)
+})
 })
