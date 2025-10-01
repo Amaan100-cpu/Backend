@@ -18,6 +18,10 @@ app.use(cors({
 }));
 app.use("/productImg",express.static("./productImg"))
 
+app.get("/", (req, res) => {
+  res.status(200).send("Backend is alive!");
+});
+
 app.use("/",registerRout)
 
 dbConnection()
